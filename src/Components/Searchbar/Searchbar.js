@@ -1,22 +1,24 @@
 import React from 'react';
 
-const Button = () => {
+const Searchbar = ({filter, handleChange}) => {
   return (
   <header className="Searchbar">
     <form className="SearchForm">
       <button type="submit" className="SearchForm-button">
-        <span className="SearchForm-button-label">Search</span>
+        <span className="SearchForm-button-label"></span>
       </button>
       <input
-        className="SearchForm-input"
-        type="text"
-        autocomplete="off"
-        autofocus
-        placeholder="Search images and photos"
+          className="SearchForm-input"
+          value={filter}
+          onChange={ handleChange}
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          
       />
     </form>
   </header>
   )
 }
-
-export default Button;
+export default Searchbar;

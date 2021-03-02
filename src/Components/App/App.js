@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import Modal from '../Modal/Modal';
+import Searchbar from '../Searchbar/Searchbar';
+import TodoView from '../TodosView/TodosView';
+import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 
 
 class App extends Component {
@@ -14,14 +17,28 @@ class App extends Component {
       showModal: !showModal,
     }))
   }
+    handleChange = event => {
+    const { value } = event.currentTarget;
+    this.setState({filter: value});
+    };
 
-
+  getFilterItems = () => {
+    return this.state.todos.filter(item =>
+      item.tags.toLowerCase().includes(this.state.filter.toLocaleLowerCase()))
+  };
 
 
   render() {
-    const { showModal } = this.state;
+    const { filter, showModal } = this.state;
     return (
       <div className="App">
+        <Searchbar
+          filter={filter}
+          handleChange={this.handleChange}
+        />
+        <TodoView
+          query={filter}
+        />
         <button className='Button' type="button" onClick={this.toggleModal}>Open Modal</button>
         {showModal &&
           <Modal onClose={this.toggleModal}>
