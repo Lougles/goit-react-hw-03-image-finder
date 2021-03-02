@@ -1,8 +1,11 @@
 import React from 'react';
 
-const ImageGalleryItem = () => {
+
+const ImageGalleryItem = ({image, tags, onClick, getLargeImg}) => {
   return (
-    <div></div>
+    <li className="ImageGalleryItem">
+      <img src={image} alt={tags} onClick={() => { getLargeImg(image); onClick() }} className="ImageGalleryItem-image"/>
+    </li>
   )
 }
 

@@ -1,53 +1,56 @@
 import React, { Component } from 'react';
 import Modal from '../Modal/Modal';
 import Searchbar from '../Searchbar/Searchbar';
-import TodoView from '../TodosView/TodosView';
-import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
-
+import ImageGallery from '../ImageGallery/ImageGallery';
+import Button from '../Button/Button'
+import axios from 'axios';
 
 class App extends Component {
   state = {
-    todos: [],
     filter: '',
     showModal: false,
+    data: [],
+    largeImageURL: '',
   }
-
+  componentDidUpdate(_, prevState) {
+    if (prevState.filter !== this.state.filter) {
+      this.searchImages();
+    }
+  }
   toggleModal = () => {
-    this.setState(({showModal}) => ({
+    this.setState(({ showModal }) => ({
       showModal: !showModal,
     }))
   }
-    handleChange = event => {
-    const { value } = event.currentTarget;
-    this.setState({filter: value});
-    };
-
-  getFilterItems = () => {
-    return this.state.todos.filter(item =>
-      item.tags.toLowerCase().includes(this.state.filter.toLocaleLowerCase()))
-  };
-
-
+  searchImages = () => {
+      axios.get(`https://pixabay.com/api/?key=20134197-bbc807323e2a93a38d1a062c9&q=${this.state.filter}&image_type=photo`).then(response => {
+      this.setState({data: response.data.hits})
+    });
+  }
+  handleSearch = query => {
+    this.setState({ filter: query, page: 1, data: [] });
+  }
+  getLargeImg = (largeImageURL) => {
+    console.log(largeImageURL);
+    this.setState({ largeImageURL:  largeImageURL});
+}
   render() {
-    const { filter, showModal } = this.state;
+    const {filter, showModal, largeImageURL } = this.state;
     return (
       <div className="App">
         <Searchbar
-          filter={filter}
-          handleChange={this.handleChange}
+          handleSearch= {this.handleSearch}
         />
-        <TodoView
-          query={filter}
+        <ImageGallery
+          getLargeImg={this.getLargeImg}
+          data={this.state.data}
+          onClick={this.toggleModal}
         />
-        <button className='Button' type="button" onClick={this.toggleModal}>Open Modal</button>
+        {filter && <Button />}
         {showModal &&
-          <Modal onClose={this.toggleModal}>
-          <h1>Hello</h1>
-          <p>
-            Lorem Ipsum является текст-заполнитель обычно используется в графических,
-            печать и издательской индустрии для предварительного просмотра макета и визуальных макетах.
-          </p>
-          <button className='Button' onClick={this.toggleModal}>Close</button>
+          <Modal
+          onClose={this.toggleModal}>
+          <img src={largeImageURL} alt="qwerty" />
         </Modal> }
       </div>
     );
