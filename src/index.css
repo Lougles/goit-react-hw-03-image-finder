@@ -178,7 +178,9 @@ img {
   max-width: 70%;
   height: auto;
 }
-
+.loader {
+  margin: 0 auto;
+}
 /*
 * Стили компонента Buton (Load more)
 */
